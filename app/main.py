@@ -1,23 +1,49 @@
+"""
+Main application entry point.
+"""
+
 from fastapi import FastAPI
 
+from app.metadata import (
+    APP_DESCRIPTION,
+    APP_TITLE,
+    APP_VERSION,
+)
+from app.types import ResponseMessage
+from app.constants import DEFAULT_HEALTH_STATUS
+
 app = FastAPI(
-    title="Enterprise AI Prediction Platform",
-    description="Production-ready FastAPI backend for AI prediction services.",
-    version="0.1.0",
+    title=APP_TITLE,
+    description=APP_DESCRIPTION,
+    version=APP_VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 
 @app.get("/")
-def root() -> dict[str, str]:
+async def get_root() -> ResponseMessage:
     """
-    Root endpoint.
+    Return the root endpoint response for the Enterprise AI Prediction Platform.
+
+    Returns:
+    ResponseMessage: Welcome message for API consumers.
     """
-    return {"message": "Welcome to Enterprise AI Prediction Platform"}
+    return {
+        "message": "Welcome to Enterprise AI Prediction Platform"
+    }
 
 
 @app.get("/health")
-def health_check() -> dict[str, str]:
+async def get_health_endpoint() -> ResponseMessage:
+    """ 
+    Return the current application health status.
+
+    Returns:
+        ResponseMessage: Health status information.
     """
-    Health check endpoint.
-    """
-    return {"status": "healthy"}
+    
+    return {
+        "status": DEFAULT_HEALTH_STATUS
+    }
+    
