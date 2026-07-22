@@ -4,7 +4,7 @@ User router for the Enterprise AI Prediction Platform.
 This module contains user-related API endpoints.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 router = APIRouter(
     prefix="/users",
@@ -30,7 +30,7 @@ USERS = [
 ]
 
 
-@router.get("")
+@router.get("",)
 async def get_users() -> list[dict[str, object]]:
     """
     Retrieve all users.
@@ -60,3 +60,29 @@ async def get_user(user_id: int) -> dict[str, object]:
         status_code=404,
         detail=f"User with ID {user_id} not found.",
     )
+
+
+@router.post(
+        "",
+         status_code=status.HTTP_201_CREATED,)
+async def create_user(user: dict[str, str]) -> dict[str, object]:
+    """
+    Create a new user.
+
+    Args:
+        user: The user data received in the request body.
+
+    Returns:
+        dict[str, object]: The created user.
+    """
+    new_id = len(USERS) + 1
+
+    new_user = {
+        "id": new_id,
+        "name": user["name"],
+        "email": user["email"],
+    }
+
+    USERS.append(new_user)
+
+    return new_user
