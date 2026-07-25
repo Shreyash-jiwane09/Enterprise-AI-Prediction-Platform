@@ -5,6 +5,7 @@ This module contains user-related API endpoints.
 """
 
 from fastapi import APIRouter, HTTPException, status, Response
+from app.schemas.user import UserResponse
 
 router = APIRouter(
     prefix="/users",
@@ -16,6 +17,7 @@ USERS = [
         "id": 1,
         "name": "Alice Johnson",
         "email": "alice@example.com",
+        "password": "secret123"
     },
     {
         "id": 2,
@@ -30,7 +32,8 @@ USERS = [
 ]
 
 
-@router.get("",)
+@router.get("",
+            response_model=list[UserResponse])
 async def get_users() -> list[dict[str, object]]:
     """
     Retrieve all users.
@@ -41,7 +44,8 @@ async def get_users() -> list[dict[str, object]]:
     return USERS
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}",
+             response_model=UserResponse,)
 async def get_user(user_id: int) -> dict[str, object]:
     """
     Retrieve a user by their unique identifier.
