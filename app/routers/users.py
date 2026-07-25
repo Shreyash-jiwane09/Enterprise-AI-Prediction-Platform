@@ -86,3 +86,50 @@ async def create_user(user: dict[str, str]) -> dict[str, object]:
     USERS.append(new_user)
 
     return new_user
+
+
+@router.put("/{user_id}")
+async def update_user(
+    user_id: int,
+    user: dict[str, str],
+) -> dict[str, object]:
+    """
+    Replace an existing user.
+    """
+    for existing_user in USERS:
+        if existing_user["id"] == user_id:
+
+            existing_user["name"] = user["name"]
+            existing_user["email"] = user["email"]
+
+            return existing_user
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"User with ID {user_id} not found."
+    )
+
+
+@router.patch("/{user_id}")
+async def patch_user(
+    user_id: int,
+    user: dict[str, str],
+) -> dict[str, object]:
+    """
+    Partially update an existing user.
+    """
+    for existing_user in USERS:
+        if existing_user["id"] == user_id:
+
+            if "name" in user:
+                existing_user["name"] = user["name"]
+
+            if "email" in user:
+                existing_user["email"] = user["email"]
+
+            return existing_user
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"User with ID {user_id} not found."
+    )
