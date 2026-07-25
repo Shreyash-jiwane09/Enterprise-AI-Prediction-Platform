@@ -4,7 +4,7 @@ User router for the Enterprise AI Prediction Platform.
 This module contains user-related API endpoints.
 """
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Response
 
 router = APIRouter(
     prefix="/users",
@@ -128,6 +128,28 @@ async def patch_user(
                 existing_user["email"] = user["email"]
 
             return existing_user
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"User with ID {user_id} not found."
+    )
+
+
+@router.delete("/{user_id}")
+async def delete_user(
+    user_id: int,
+) -> Response:
+    """
+    Delete an existing user.
+    """
+    for existing_user in USERS:
+        if existing_user["id"] == user_id:
+
+            USERS.remove(existing_user)
+
+            return Response(
+                status_code=status.HTTP_204_NO_CONTENT,
+            )
 
     raise HTTPException(
         status_code=404,
